@@ -1,0 +1,8 @@
+user = {
+    username:string;
+    email:string,
+    password:string,
+    bio:string,
+    followers:,
+    ProfilePic:string
+}
