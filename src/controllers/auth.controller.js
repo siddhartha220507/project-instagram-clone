@@ -10,14 +10,15 @@ async function ragisterController(req, res){
             {email}
         ]
     })
-}
-    if(isUserAlreadyExists){
+
+    if (isUserAlreadyExists) {
         return res.status(409).json({
-            message:"user already exists" + (isUserAlreadyExists.email === email ? " email already exists" : " username already exists")
-        })
+                message: "User already exists " + (isUserAlreadyExists.email == email ? "Email already exists" : "Username already exists")
+            })
     }
     
     const hash = await bcrypt.hash(password, 10)
+
     const user = await userModel.create({
         username,
         email,
@@ -26,40 +27,48 @@ async function ragisterController(req, res){
         password: hash
     })
     const token = jwt.sign ({
-        id:user._id,
-    },process.env.JWT_SECRET_KEY)
+        id:user._id
+    },
+    process.env.JWT_SECRET_KEY,{ expiresIn: "1d" })
     
     res.cookie("token",token)
     res.status(201).json({
         message:"user registered successfully",
         user:{
-            username:user.username,
             email:user.email,
+            username:user.username,
             bio:user.bio,
             ProfilePic:user.ProfilePic
         }
     })
+}
     async function loginController(req,res){
     const {username,email,password} = req.body
-    const user = userModel.findOne({
+    const user = await userModel.findOne({
         $or:[
-            {username: username}
+            {username: username},
             {email: email}
         ]
     })
-    is(!user){
+    if(!user){
         return res.status(404).json({
+            message:"Invalid Credentials"
+        })
+    }
+    const isPasswordMatched = await bcrypt.compare(password, user.password)
+    if(!isPasswordMatched){
+        return res.status(401).json({
             message:"Invalid Credentials"
         })
     }
     const token = jwt.sign(
         {id:user._id},
         process.env.JWT_SECRET_KEY,
-        {expressIn:"id"}
+        {expiresIn:"1d"}
     )
     res.cookie("token",token)
     res.status(200).json({
-        message:"User logged In Successfully"
+        message:"User logged In Successfully",
         user:{
             username:user.username,
             email:user.email,

@@ -8,6 +8,4 @@ postRouter.post("/",upload.single("image"),postController.createPostController)
 
 
 
-
-
 module.exports = postRouter
