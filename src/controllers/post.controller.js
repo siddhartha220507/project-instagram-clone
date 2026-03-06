@@ -1,17 +1,20 @@
-const postModel = require('../models/post.model')
-const ImageKit = new ImageKit({
-    privateKey:process.env.IMAGEKIT_PRIVATE_KEY
+const postModel = require("../models/post.model")
+const ImageKit = require("imagekit")
+
+
+const imagekit = new ImageKit({
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 })
 
 async function createPostController(req,res){
     console.log(req.body,req.file)
-    constfile = await ImageKit.files.upload({
-        file: await tofile(Buffer.from(req.file.Buffer),"file"),
+    const file = await imagekit.upload({
+        file: await toFile(Buffer.from(req.file.buffer), "file"),
         fileName:"test"
     })
-    req.send(file)
+    res.send(file)
 }
 
 
 
-module.exports = {CreatePostController}
+module.exports = {createPostController}
