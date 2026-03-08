@@ -16,8 +16,7 @@ password:{
     required:true
 },
 bio:{
-    type:String,
-    default: ""
+    type:String
 },
 ProfilePic:{
     type:String,
