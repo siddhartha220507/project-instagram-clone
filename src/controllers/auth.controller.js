@@ -13,7 +13,7 @@ async function ragisterController(req, res){
 
     if (isUserAlreadyExists) {
         return res.status(409).json({
-                message: "User already exists " + (isUserAlreadyExists.email == email ? "Email already exists" : "Username already exists")
+                message: " " + (isUserAlreadyExists.email == email ? "Email already exists" : "Username already exists")
             })
     }
     
